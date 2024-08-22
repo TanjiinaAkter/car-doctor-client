@@ -2,10 +2,14 @@ import login from "../../assets/images/login/login.svg";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
+import axios from "axios";
 const Login = () => {
+  const location = useLocation();
+  console.log(location);
+  const navigate = useNavigate();
   const { signin } = useContext(AuthContext);
   const handleLogin = (e) => {
     e.preventDefault();
@@ -16,7 +20,21 @@ const Login = () => {
 
     signin(email, password)
       .then((result) => {
-        console.log(result.user);
+        const loggedInUser = result.user;
+        console.log(loggedInUser);
+        // just email send korbo..password ta pathabo na
+        const user = { email };
+        // axios use kortesi tai ,method,headers,body eisob bole deya lagtese na...res.data te amra token pabo
+        axios
+          .post("http://localhost:5000/jwt", user, { withCredentials: true })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.success) {
+              navigate(location?.state ? location.state : "/");
+            }
+          });
+        // axios er kaj korbo token related tai comment out korlam..install axios js ...
+        // navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {
         console.error(error);
@@ -77,7 +95,7 @@ const Login = () => {
               </span>
             </div>
             <p className="text-center">
-              New to cars doctor?{" "}
+              New to cars doctor?
               <Link to="/signup">
                 <span className="text-orange-600"> Sign up</span>
               </Link>

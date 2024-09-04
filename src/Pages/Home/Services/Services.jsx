@@ -1,18 +1,22 @@
-import { useEffect } from "react";
-import { useState } from "react";
+// import { useEffect } from "react";
+// import { useState } from "react";
 import ServiceCard from "./ServiceCard";
+import useServices from "../../../customhook/useServices";
 
 const Services = () => {
-  const [services, setServices] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:5000/services")
-      .then((res) => res.json())
-      .then((data) => setServices(data));
-  }, []);
+  const services = useServices();
+  // const [services, setServices] = useState([]);
+  // useEffect(() => {
+  //   fetch("https://car-doctor-server-mu-sable.vercel.app/services")
+  //     .then((res) => res.json())
+  //     .then((data) => setServices(data));
+  // }, []);
   return (
     <div className="mx-auto w-full ">
       <div className="text-center space-y-3 mt-8  md:w-1/2 mx-auto">
-        <h3 className="text-2xl font-bold text-orange-600">Service</h3>
+        <h3 className="text-2xl font-bold text-orange-600">
+          Service {services.length}
+        </h3>
         <h2 className="text-4xl font-bold">Our Service Area</h2>
         <p className="text-gray-500">
           the majority have suffered alteration in some form, by injected

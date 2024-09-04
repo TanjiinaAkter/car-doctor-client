@@ -2,15 +2,17 @@ import login from "../../assets/images/login/login.svg";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
-import axios from "axios";
+import useAuthEasily from "../../customhook/useAuthEasily";
+// import axios from "axios";
 const Login = () => {
   const location = useLocation();
   console.log(location);
-  const navigate = useNavigate();
-  const { signin } = useContext(AuthContext);
+  // const navigate = useNavigate();
+  const { signin } = useAuthEasily();
+  // const { signin } = useContext(AuthContext);
   const handleLogin = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -23,22 +25,21 @@ const Login = () => {
         const loggedInUser = result.user;
         console.log(loggedInUser);
         // just email send korbo..password ta pathabo na
-        const user = { email };
+        // const user = { email };
         // axios use kortesi tai ,method,headers,body eisob bole deya lagtese na...res.data te amra token pabo
-        axios
-          .post("http://localhost:5000/jwt", user, { withCredentials: true })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.success) {
-              navigate(location?.state ? location.state : "/");
-            }
-          });
-        // axios er kaj korbo token related tai comment out korlam..install axios js ...
-        // navigate(location?.state ? location.state : "/");
+        // axios
+        // .post("https://car-doctor-server-mu-sable.vercel.app/jwt", user, { withCredentials: true })
+        // .then((res) => {
+        // console.log(res.data);
+        // if (res.data.success) {
+        //   navigate(location?.state ? location.state : "/");
+        // }
       })
       .catch((error) => {
         console.error(error);
       });
+    // axios er kaj korbo token related tai comment out korlam..install axios js ...
+    // navigate(location?.state ? location.state : "/");
   };
   return (
     <div className="  min-h-screen">

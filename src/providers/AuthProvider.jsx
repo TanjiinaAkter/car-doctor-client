@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import axios from "axios";
 export const AuthContext = createContext();
 const auth = getAuth(app);
 const AuthProvider = ({ children }) => {
@@ -20,8 +21,37 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log(currentUser);
+      const userEmail = currentUser?.email || user?.email;
+      const loggedUser = { email: userEmail };
+      console.log("auth logedin user email", loggedUser);
       setUser(currentUser);
       setLoading(false);
+      if (currentUser) {
+        axios
+          .post(
+            "https://car-doctor-server-mu-sable.vercel.app/jwt",
+            loggedUser,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log("current user token from observer", res.data);
+          });
+      } else {
+        // user na thakle seta req.body diye server('/logout') bujbe user nai then direct cookie clear code diye token remove hoye jabe
+        axios
+          .post(
+            "https://car-doctor-server-mu-sable.vercel.app/logout",
+            loggedUser,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          });
+      }
     });
     return () => {
       return unSubscribe();
